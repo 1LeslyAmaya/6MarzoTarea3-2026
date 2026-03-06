@@ -174,21 +174,36 @@
        class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
         <i class="bi bi-speedometer2"></i> Dashboard
     </a>
+<div class="nav-section">Académico</div>
+<a href="{% url 'alumno:list' %}"
+   class="nav-link {% if request.path == '/alumnos/' %}active{% endif %}">
+  <i class="bi bi-people-fill"></i> Alumnos
+</a>
 
-    <div class="nav-section">Académico</div>
-    <a href="{% url 'alumno:list' %}"
-       class="nav-link {% if request.resolver_match.namespace == 'alumno' %}active{% endif %}">
-        <i class="bi bi-people-fill"></i> Alumnos
-    </a>
+<a href="{% url 'alumno:cursos_list' %}"
+   class="nav-link {% if request.path == '/alumnos/cursos/' %}active{% endif %}">
+  <i class="bi bi-journal-bookmark-fill"></i> Cursos
+</a>
 
-    <!-- Módulos futuros -->
-    <a href="#" class="nav-link">
-        <i class="bi bi-journal-bookmark-fill"></i> Cursos
-    </a>
-    <a href="#" class="nav-link">
-        <i class="bi bi-clipboard2-check-fill"></i> Calificaciones
-    </a>
+<a href="{% url 'alumno:catedraticos_list' %}"
+   class="nav-link {% if request.path == '/alumnos/catedraticos/' %}active{% endif %}">
+  <i class="bi bi-person-badge-fill"></i> Catedráticos
+</a>
 
+<a href="{% url 'alumno:asignaciones_list' %}"
+   class="nav-link {% if request.path == '/alumnos/asignaciones/' %}active{% endif %}">
+  <i class="bi bi-calendar2-week-fill"></i> Asignaciones
+</a>
+
+<a href="{% url 'alumno:inscripciones_list' %}"
+   class="nav-link {% if request.path == '/alumnos/inscripciones/' %}active{% endif %}">
+  <i class="bi bi-person-lines-fill"></i> Inscripciones
+</a>
+
+<a href="{% url 'alumno:notas_list' %}"
+   class="nav-link {% if request.path == '/alumnos/notas/' %}active{% endif %}">
+  <i class="bi bi-clipboard2-check-fill"></i> Notas
+</a>
     <div class="nav-section">Sistema</div>
     <a href="#" class="nav-link">
         <i class="bi bi-gear-fill"></i> Configuración
