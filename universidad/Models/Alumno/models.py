@@ -31,7 +31,7 @@ class Catedratico(models.Model):
         db_table = 'catedratico'
 
 
-class Curso(models.Model):
+class Cursos(models.Model):
     nombre = models.CharField(max_length=120)
     codigo = models.CharField(max_length=20, unique=True)
     creditos = models.PositiveSmallIntegerField(default=0)
@@ -45,7 +45,7 @@ class Curso(models.Model):
 
 
 class AsignacionCurso(models.Model):
-    curso = models.ForeignKey(Curso, on_delete=models.PROTECT)
+    curso = models.ForeignKey(Cursos, on_delete=models.PROTECT)
     catedratico = models.ForeignKey(Catedratico, on_delete=models.PROTECT)
     horario = models.CharField(max_length=100)  # Ej: "Lun-Mie 18:00-20:00"
     aula = models.CharField(max_length=50, blank=True)

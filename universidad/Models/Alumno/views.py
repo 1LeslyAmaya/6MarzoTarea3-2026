@@ -4,6 +4,7 @@ from django.contrib import messages
 from .models import Alumno
 from .forms import AlumnoForm
 
+
 def alumno_list(request):
     query   = request.GET.get('q', '')
     alumnos = Alumno.objects.all()
@@ -52,3 +53,18 @@ def alumno_delete(request, pk):
         messages.success(request, 'Alumno eliminado.')
         return redirect('alumno:list')
     return render(request, 'alumno/confirm_delete.html', {'alumno': alumno})
+
+def cursos_list(request):
+    return render(request, "alumno/cursos.html")
+
+def catedraticos_list(request):
+    return render(request, "alumno/catedraticos.html")
+
+def asignaciones_list(request):
+    return render(request, "alumno/asignaciones.html")
+
+def inscripciones_list(request):
+    return render(request, "alumno/inscripciones.html")
+
+def notas_list(request):
+    return render(request, "alumno/notas.html")
