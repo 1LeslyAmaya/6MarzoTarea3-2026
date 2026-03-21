@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import Alumno
@@ -6,65 +5,76 @@ from .forms import AlumnoForm
 
 
 def alumno_list(request):
-    query   = request.GET.get('q', '')
+    query = request.GET.get('q', '')
     alumnos = Alumno.objects.all()
 
     if query:
-        alumnos = alumnos.filter(first_name__icontains=query) \
-                | alumnos.filter(last_name__icontains=query)  \
-                | alumnos.filter(email__icontains=query)
+        alumnos = alumnos.filter(nombre__icontains=query) | \
+                  alumnos.filter(apellido__icontains=query) | \
+                  alumnos.filter(email__icontains=query)
+
+    form = AlumnoForm(request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Alumno registrado correctamente.')
+            return redirect('alumno:list')
+        else:
+            messages.error(request, 'Error al guardar el alumno.')
 
     return render(request, 'alumno/list.html', {
         'alumnos': alumnos,
-        'query':   query
+        'query': query,
+        'form': form
     })
 
-def alumno_detail(request, pk):
-    alumno = get_object_or_404(Alumno, pk=pk)
-    return render(request, 'alumno/detail.html', {'alumno': alumno})
-
-def alumno_create(request):
-    form = AlumnoForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Alumno registrado correctamente.')
-        return redirect('alumno:list')
-    return render(request, 'alumno/form.html', {
-        'form':  form,
-        'title': 'Nuevo Alumno'
-    })
 
 def alumno_edit(request, pk):
     alumno = get_object_or_404(Alumno, pk=pk)
-    form   = AlumnoForm(request.POST or None, instance=alumno)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Alumno actualizado correctamente.')
-        return redirect('alumno:list')
+    form = AlumnoForm(request.POST or None, instance=alumno)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Alumno actualizado correctamente.')
+            return redirect('alumno:list')
+        else:
+            messages.error(request, 'Error al actualizar.')
+
     return render(request, 'alumno/form.html', {
-        'form':  form,
-        'title': f'Editar: {alumno.first_name} {alumno.last_name}'
+        'form': form,
+        'title': 'Editar Alumno'
     })
+
 
 def alumno_delete(request, pk):
     alumno = get_object_or_404(Alumno, pk=pk)
+
     if request.method == 'POST':
         alumno.delete()
         messages.success(request, 'Alumno eliminado.')
         return redirect('alumno:list')
-    return render(request, 'alumno/confirm_delete.html', {'alumno': alumno})
 
+    return redirect('alumno:list')
+
+
+# 🔹 VISTAS EXTRA
 def cursos_list(request):
     return render(request, "alumno/cursos.html")
+
 
 def catedraticos_list(request):
     return render(request, "alumno/catedraticos.html")
 
+
 def asignaciones_list(request):
     return render(request, "alumno/asignaciones.html")
 
+
 def inscripciones_list(request):
     return render(request, "alumno/inscripciones.html")
+
 
 def notas_list(request):
     return render(request, "alumno/notas.html")
