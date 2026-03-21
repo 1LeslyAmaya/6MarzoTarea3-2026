@@ -16,6 +16,10 @@ urlpatterns = [
 
 
     path('catedraticos/', views.catedraticos_list, name='catedraticos_list'),
+    path('catedraticos/<int:pk>/editar/', views.catedratico_edit, name='catedratico_edit'),
+    path('catedraticos/<int:pk>/eliminar/', views.catedratico_delete, name='catedratico_delete'),
+
+
     path('asignaciones/', views.asignaciones_list, name='asignaciones_list'),
     path('inscripciones/', views.inscripciones_list, name='inscripciones_list'),
     path('notas/', views.notas_list, name='notas_list'),

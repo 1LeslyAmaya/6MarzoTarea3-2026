@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from .models import Alumno, Cursos
-from .forms import AlumnoForm, CursoForm
+
+from .models import Alumno, Cursos, Catedratico
+from .forms import AlumnoForm, CursoForm, CatedraticoForm
 
 
-# 🔹 ALUMNOS
 def alumno_list(request):
     query = request.GET.get('q', '')
     alumnos = Alumno.objects.all()
@@ -60,7 +60,7 @@ def alumno_delete(request, pk):
     return redirect('alumno:list')
 
 
-# 🔹 CURSOS (CRUD)
+
 def cursos_list(request):
     cursos = Cursos.objects.all()
     form = CursoForm(request.POST or None)
@@ -95,14 +95,69 @@ def curso_edit(request, pk):
 
 def curso_delete(request, pk):
     curso = get_object_or_404(Cursos, pk=pk)
-    curso.delete()
-    messages.success(request, 'Curso eliminado.')
+
+    if request.method == 'POST':
+        curso.delete()
+        messages.success(request, 'Curso eliminado.')
+        return redirect('alumno:cursos_list')
+
     return redirect('alumno:cursos_list')
 
 
-# 🔹 OTRAS VISTAS
 def catedraticos_list(request):
-    return render(request, "alumno/catedraticos.html")
+    query = request.GET.get('q', '')
+    catedraticos = Catedratico.objects.all()
+
+    if query:
+        catedraticos = catedraticos.filter(first_name__icontains=query) | \
+                       catedraticos.filter(last_name__icontains=query) | \
+                       catedraticos.filter(email__icontains=query)
+
+    form = CatedraticoForm(request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Catedrático registrado correctamente.')
+            return redirect('alumno:catedraticos_list')
+        else:
+            messages.error(request, 'Error al guardar el catedrático.')
+
+    return render(request, 'alumno/catedraticos.html', {
+        'catedraticos': catedraticos,
+        'query': query,
+        'form': form
+    })
+
+
+def catedratico_edit(request, pk):
+    catedratico = get_object_or_404(Catedratico, pk=pk)
+    form = CatedraticoForm(request.POST or None, instance=catedratico)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Catedrático actualizado correctamente.')
+            return redirect('alumno:catedraticos_list')
+        else:
+            messages.error(request, 'Error al actualizar.')
+
+    return render(request, 'alumno/catedratico_form.html', {
+        'form': form,
+        'title': 'Editar Catedrático'
+    })
+
+
+def catedratico_delete(request, pk):
+    catedratico = get_object_or_404(Catedratico, pk=pk)
+
+    if request.method == 'POST':
+        catedratico.delete()
+        messages.success(request, 'Catedrático eliminado.')
+        return redirect('alumno:catedraticos_list')
+
+    return redirect('alumno:catedraticos_list')
+
 
 
 def asignaciones_list(request):
