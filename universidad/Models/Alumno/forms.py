@@ -1,9 +1,10 @@
 from django import forms
-from .models import Alumno
+from .models import Alumno, Cursos
+
 
 class AlumnoForm(forms.ModelForm):
     class Meta:
-        model  = Alumno
+        model = Alumno
         fields = [
             'first_name',
             'last_name',
@@ -13,8 +14,6 @@ class AlumnoForm(forms.ModelForm):
             'birth_date',
             'is_active',
         ]
-        # id → auto, no se incluye
-        # enrolled_at → auto_now_add=True, no se incluye
 
         widgets = {
             'first_name': forms.TextInput(attrs={
@@ -45,3 +44,8 @@ class AlumnoForm(forms.ModelForm):
                 'class': 'form-check-input'
             }),
         }
+
+class CursoForm(forms.ModelForm):
+    class Meta:
+        model = Cursos
+        fields = '__all__'

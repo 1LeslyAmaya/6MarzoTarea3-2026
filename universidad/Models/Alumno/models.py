@@ -34,6 +34,7 @@ class Catedratico(models.Model):
 class Cursos(models.Model):
     nombre = models.CharField(max_length=120)
     codigo = models.CharField(max_length=20, unique=True)
+    descripcion = models.TextField(blank=True)
     creditos = models.PositiveSmallIntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
