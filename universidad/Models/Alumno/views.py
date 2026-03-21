@@ -7,6 +7,10 @@ from .forms import AlumnoForm, CursoForm, CatedraticoForm
 from .models import AsignacionCurso
 from .forms import AsignacionCursoForm
 
+from .models import InscripcionAlumno
+from .forms import InscripcionAlumnoForm
+
+
 def alumno_list(request):
     query = request.GET.get('q', '')
     alumnos = Alumno.objects.all()
@@ -214,6 +218,51 @@ def asignacion_delete(request, pk):
 def inscripciones_list(request):
     return render(request, "alumno/inscripciones.html")
 
+
+
+def inscripciones_list(request):
+    inscripciones = InscripcionAlumno.objects.select_related('alumno', 'asignacion')
+    form = InscripcionAlumnoForm(request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Inscripción realizada correctamente.')
+            return redirect('alumno:inscripciones_list')
+        else:
+            messages.error(request, 'Error al inscribir.')
+
+    return render(request, 'alumno/inscripciones.html', {
+        'inscripciones': inscripciones,
+        'form': form
+    })
+
+
+def inscripcion_edit(request, pk):
+    inscripcion = get_object_or_404(InscripcionAlumno, pk=pk)
+    form = InscripcionAlumnoForm(request.POST or None, instance=inscripcion)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Inscripción actualizada.')
+            return redirect('alumno:inscripciones_list')
+
+    return render(request, 'alumno/inscripcion_form.html', {
+        'form': form,
+        'title': 'Editar Inscripción'
+    })
+
+
+def inscripcion_delete(request, pk):
+    inscripcion = get_object_or_404(InscripcionAlumno, pk=pk)
+
+    if request.method == 'POST':
+        inscripcion.delete()
+        messages.success(request, 'Inscripción eliminada.')
+        return redirect('alumno:inscripciones_list')
+
+    return redirect('alumno:inscripciones_list')
 
 def notas_list(request):
     return render(request, "alumno/notas.html")

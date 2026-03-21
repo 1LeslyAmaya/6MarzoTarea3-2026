@@ -25,5 +25,8 @@ urlpatterns = [
     path('asignaciones/<int:pk>/eliminar/', views.asignacion_delete, name='asignacion_delete'),
 
     path('inscripciones/', views.inscripciones_list, name='inscripciones_list'),
+    path('inscripciones/<int:pk>/editar/', views.inscripcion_edit, name='inscripcion_edit'),
+    path('inscripciones/<int:pk>/eliminar/', views.inscripcion_delete, name='inscripcion_delete'),
+
     path('notas/', views.notas_list, name='notas_list'),
 ]

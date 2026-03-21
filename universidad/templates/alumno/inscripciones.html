@@ -1,7 +1,72 @@
 {% extends "base.html" %}
+
 {% block content %}
 <div class="container mt-4">
-  <h2>Inscripciones</h2>
-  <p>inscripciones nuevas</p>
+
+<h2>Inscripciones</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<form method="POST" class="mb-4">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button class="btn btn-success">
+        Inscribir Alumno
+    </button>
+</form>
+
+<hr>
+
+<table class="table table-bordered">
+<thead>
+<tr>
+<th>Alumno</th>
+<th>Curso</th>
+<th>Catedrático</th>
+<th>Horario</th>
+<th>Fecha</th>
+<th>Acciones</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for i in inscripciones %}
+<tr>
+
+<td>{{ i.alumno }}</td>
+<td>{{ i.asignacion.curso }}</td>
+<td>{{ i.asignacion.catedratico }}</td>
+<td>{{ i.asignacion.horario }}</td>
+<td>{{ i.fecha_asignacion }}</td>
+
+<td>
+
+<a href="{% url 'alumno:inscripcion_edit' i.id %}" class="btn btn-warning btn-sm">
+Editar
+</a>
+
+<form method="POST" action="{% url 'alumno:inscripcion_delete' i.id %}" style="display:inline;">
+{% csrf_token %}
+<button class="btn btn-danger btn-sm">
+Eliminar
+</button>
+</form>
+
+</td>
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+
 </div>
 {% endblock %}
