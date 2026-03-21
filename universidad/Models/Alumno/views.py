@@ -10,6 +10,9 @@ from .forms import AsignacionCursoForm
 from .models import InscripcionAlumno
 from .forms import InscripcionAlumnoForm
 
+from .models import Nota
+from .forms import NotaForm
+
 
 def alumno_list(request):
     query = request.GET.get('q', '')
@@ -266,3 +269,53 @@ def inscripcion_delete(request, pk):
 
 def notas_list(request):
     return render(request, "alumno/notas.html")
+
+
+def notas_list(request):
+    notas = Nota.objects.select_related(
+        'inscripcion__alumno',
+        'inscripcion__asignacion__curso',
+        'inscripcion__asignacion__catedratico'
+    )
+
+    form = NotaForm(request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Nota registrada correctamente.')
+            return redirect('alumno:notas_list')
+        else:
+            messages.error(request, 'Error al guardar la nota.')
+
+    return render(request, 'alumno/notas.html', {
+        'notas': notas,
+        'form': form
+    })
+
+
+def nota_edit(request, pk):
+    nota = get_object_or_404(Nota, pk=pk)
+    form = NotaForm(request.POST or None, instance=nota)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Nota actualizada.')
+            return redirect('alumno:notas_list')
+
+    return render(request, 'alumno/nota_form.html', {
+        'form': form,
+        'title': 'Editar Nota'
+    })
+
+
+def nota_delete(request, pk):
+    nota = get_object_or_404(Nota, pk=pk)
+
+    if request.method == 'POST':
+        nota.delete()
+        messages.success(request, 'Nota eliminada.')
+        return redirect('alumno:notas_list')
+
+    return redirect('alumno:notas_list')

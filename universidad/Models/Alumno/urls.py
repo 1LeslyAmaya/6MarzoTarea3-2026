@@ -29,4 +29,6 @@ urlpatterns = [
     path('inscripciones/<int:pk>/eliminar/', views.inscripcion_delete, name='inscripcion_delete'),
 
     path('notas/', views.notas_list, name='notas_list'),
+    path('notas/', views.notas_list, name='notas_list'),path('notas/<int:pk>/editar/', views.nota_edit, name='nota_edit'),
+    path('notas/<int:pk>/eliminar/', views.nota_delete, name='nota_delete'),
 ]
