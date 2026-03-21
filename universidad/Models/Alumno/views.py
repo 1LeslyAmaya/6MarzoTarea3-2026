@@ -4,6 +4,8 @@ from django.contrib import messages
 from .models import Alumno, Cursos, Catedratico
 from .forms import AlumnoForm, CursoForm, CatedraticoForm
 
+from .models import AsignacionCurso
+from .forms import AsignacionCursoForm
 
 def alumno_list(request):
     query = request.GET.get('q', '')
@@ -162,6 +164,51 @@ def catedratico_delete(request, pk):
 
 def asignaciones_list(request):
     return render(request, "alumno/asignaciones.html")
+
+
+def asignaciones_list(request):
+    asignaciones = AsignacionCurso.objects.select_related('curso', 'catedratico')
+    form = AsignacionCursoForm(request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Asignación creada correctamente.')
+            return redirect('alumno:asignaciones_list')
+        else:
+            messages.error(request, 'Error al guardar.')
+
+    return render(request, 'alumno/asignaciones.html', {
+        'asignaciones': asignaciones,
+        'form': form
+    })
+
+
+def asignacion_edit(request, pk):
+    asignacion = get_object_or_404(AsignacionCurso, pk=pk)
+    form = AsignacionCursoForm(request.POST or None, instance=asignacion)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Asignación actualizada.')
+            return redirect('alumno:asignaciones_list')
+
+    return render(request, 'alumno/asignacion_form.html', {
+        'form': form,
+        'title': 'Editar Asignación'
+    })
+
+
+def asignacion_delete(request, pk):
+    asignacion = get_object_or_404(AsignacionCurso, pk=pk)
+
+    if request.method == 'POST':
+        asignacion.delete()
+        messages.success(request, 'Asignación eliminada.')
+        return redirect('alumno:asignaciones_list')
+
+    return redirect('alumno:asignaciones_list')
 
 
 def inscripciones_list(request):

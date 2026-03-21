@@ -21,6 +21,9 @@ urlpatterns = [
 
 
     path('asignaciones/', views.asignaciones_list, name='asignaciones_list'),
+    path('asignaciones/<int:pk>/editar/', views.asignacion_edit, name='asignacion_edit'),
+    path('asignaciones/<int:pk>/eliminar/', views.asignacion_delete, name='asignacion_delete'),
+
     path('inscripciones/', views.inscripciones_list, name='inscripciones_list'),
     path('notas/', views.notas_list, name='notas_list'),
 ]

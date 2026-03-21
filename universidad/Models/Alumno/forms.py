@@ -1,5 +1,5 @@
 from django import forms
-from .models import Alumno, Cursos , Catedratico
+from .models import Alumno, Cursos , Catedratico,  AsignacionCurso
 
 
 class AlumnoForm(forms.ModelForm):
@@ -55,3 +55,16 @@ class CatedraticoForm(forms.ModelForm):
     class Meta:
         model = Catedratico
         fields = ['first_name', 'last_name', 'email', 'phone', 'is_active']
+
+
+class AsignacionCursoForm(forms.ModelForm):
+    class Meta:
+        model = AsignacionCurso
+        fields = ['curso', 'catedratico', 'horario', 'aula', 'is_active']
+        labels = {
+            'curso': 'Curso',
+            'catedratico': 'Catedrático',
+            'horario': 'Horario',
+            'aula': 'Aula',
+            'is_active': 'Activo'
+        }
