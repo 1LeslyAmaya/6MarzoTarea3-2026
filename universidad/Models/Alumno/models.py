@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Alumno(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -48,7 +49,7 @@ class Cursos(models.Model):
 class AsignacionCurso(models.Model):
     curso = models.ForeignKey(Cursos, on_delete=models.PROTECT)
     catedratico = models.ForeignKey(Catedratico, on_delete=models.PROTECT)
-    horario = models.CharField(max_length=100)  # Ej: "Lun-Mie 18:00-20:00"
+    horario = models.CharField(max_length=100)
     aula = models.CharField(max_length=50, blank=True)
     is_active = models.BooleanField(default=True)
 
@@ -73,7 +74,7 @@ class InscripcionAlumno(models.Model):
 
 class Nota(models.Model):
     inscripcion = models.ForeignKey(InscripcionAlumno, on_delete=models.CASCADE)
-    calificacion = models.DecimalField(max_digits=5, decimal_places=2)  # 0.00 a 100.00
+    calificacion = models.DecimalField(max_digits=5, decimal_places=2)
     fecha_registro = models.DateTimeField(auto_now_add=True)
     observacion = models.CharField(max_length=200, blank=True)
 
