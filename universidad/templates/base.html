@@ -21,7 +21,7 @@
             background: #f1f5f9;
         }
 
-        /* ══════════════ SIDEBAR ══════════════ */
+        /* SIDEBAR */
         #sidebar {
             width: 240px;
             min-height: 100vh;
@@ -99,7 +99,7 @@
             text-align: center;
         }
 
-        /* ══════════════ CONTENIDO PRINCIPAL ══════════════ */
+        /* MAIN CONTENT */
         #main-content {
             margin-left: 240px;
             flex: 1;
@@ -108,7 +108,7 @@
             min-height: 100vh;
         }
 
-        /* ══════════════ TOPBAR ══════════════ */
+        /* TOPBAR */
         #topbar {
             background: #fff;
             padding: 0.8rem 1.8rem;
@@ -145,13 +145,12 @@
             border-radius: 50%;
         }
 
-        /* ══════════════ CONTENIDO ══════════════ */
+        /* PAGE */
         .page-wrapper {
             padding: 1.8rem;
             flex: 1;
         }
 
-        /* ══════════════ ALERTS ══════════════ */
         .alerts-wrapper {
             padding: 0.8rem 1.8rem 0;
         }
@@ -159,9 +158,10 @@
 
     {% block extra_css %}{% endblock %}
 </head>
+
 <body>
 
-<!-- ══════════════════════ SIDEBAR ══════════════════════ -->
+<!-- SIDEBAR -->
 <nav id="sidebar">
 
     <div class="sidebar-brand">
@@ -170,41 +170,52 @@
     </div>
 
     <div class="nav-section">Principal</div>
+
     <a href="{% url 'dashboard' %}"
        class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
         <i class="bi bi-speedometer2"></i> Dashboard
     </a>
-<div class="nav-section">Académico</div>
-<a href="{% url 'alumno:list' %}"
-   class="nav-link {% if request.path == '/alumnos/' %}active{% endif %}">
-  <i class="bi bi-people-fill"></i> Alumnos
-</a>
 
-<a href="{% url 'alumno:cursos_list' %}"
-   class="nav-link {% if request.path == '/alumnos/cursos/' %}active{% endif %}">
-  <i class="bi bi-journal-bookmark-fill"></i> Cursos
-</a>
+    <div class="nav-section">Académico</div>
 
-<a href="{% url 'alumno:catedraticos_list' %}"
-   class="nav-link {% if request.path == '/alumnos/catedraticos/' %}active{% endif %}">
-  <i class="bi bi-person-badge-fill"></i> Catedráticos
-</a>
+    <a href="{% url 'alumno:list' %}" class="nav-link">
+        <i class="bi bi-people-fill"></i> Alumnos
+    </a>
 
-<a href="{% url 'alumno:asignaciones_list' %}"
-   class="nav-link {% if request.path == '/alumnos/asignaciones/' %}active{% endif %}">
-  <i class="bi bi-calendar2-week-fill"></i> Asignaciones
-</a>
+    <a href="{% url 'alumno:cursos_list' %}" class="nav-link">
+        <i class="bi bi-journal-bookmark-fill"></i> Cursos
+    </a>
 
-<a href="{% url 'alumno:inscripciones_list' %}"
-   class="nav-link {% if request.path == '/alumnos/inscripciones/' %}active{% endif %}">
-  <i class="bi bi-person-lines-fill"></i> Inscripciones
-</a>
+    <a href="{% url 'alumno:catedraticos_list' %}" class="nav-link">
+        <i class="bi bi-person-badge-fill"></i> Catedráticos
+    </a>
 
-<a href="{% url 'alumno:notas_list' %}"
-   class="nav-link {% if request.path == '/alumnos/notas/' %}active{% endif %}">
-  <i class="bi bi-clipboard2-check-fill"></i> Notas
-</a>
+    <a href="{% url 'alumno:asignaciones_list' %}" class="nav-link">
+        <i class="bi bi-calendar2-week-fill"></i> Asignaciones
+    </a>
+
+    <a href="{% url 'alumno:inscripciones_list' %}" class="nav-link">
+        <i class="bi bi-person-lines-fill"></i> Inscripciones
+    </a>
+
+    <a href="{% url 'alumno:notas_list' %}" class="nav-link">
+        <i class="bi bi-clipboard2-check-fill"></i> Notas
+    </a>
+
+    <!-- REPORTES -->
+    <div class="nav-section">Reportes</div>
+
+    <a href="{% url 'alumno:reporte_alumnos' %}" class="nav-link">
+        <i class="bi bi-bar-chart-fill"></i> Reporte Alumnos Cursos
+    </a>
+
+    <a href="{% url 'alumno:reporte_promedios' %}" class="nav-link">
+        <i class="bi bi-graph-up"></i> Promedio por Cursos
+    </a>
+
+    <!-- SISTEMA -->
     <div class="nav-section">Sistema</div>
+
     <a href="#" class="nav-link">
         <i class="bi bi-gear-fill"></i> Configuración
     </a>
@@ -215,24 +226,22 @@
 
 </nav>
 
-<!-- ══════════════════════ CONTENIDO PRINCIPAL ══════════════════════ -->
+<!-- CONTENIDO -->
 <div id="main-content">
 
-    <!-- Topbar -->
     <div id="topbar">
         <h6 class="page-heading">{% block page_title %}Panel{% endblock %}</h6>
+
         <div class="topbar-right">
             <span class="user-name">Administrador</span>
             <img src="https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff">
         </div>
     </div>
 
-    <!-- Mensajes Flash (success, error, etc.) -->
     {% if messages %}
     <div class="alerts-wrapper">
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-2" role="alert">
-            <i class="bi bi-{% if message.tags == 'success' %}check-circle{% else %}exclamation-triangle{% endif %}-fill me-2"></i>
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-2">
             {{ message }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
@@ -240,15 +249,14 @@
     </div>
     {% endif %}
 
-    <!-- Contenido de cada página -->
     <div class="page-wrapper">
         {% block content %}{% endblock %}
     </div>
 
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 {% block extra_js %}{% endblock %}
+
 </body>
 </html>

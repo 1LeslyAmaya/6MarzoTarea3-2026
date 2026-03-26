@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reporte Alumnos por Curso</title>
+</head>
+<body>
+
+<h2>Reporte de Alumnos Inscritos en Cursos</h2>
+
+<table border="1">
+    <tr>
+        <th>Alumno</th>
+        <th>Curso</th>
+        <th>Catedrático</th>
+    </tr>
+
+    {% for d in datos %}
+    <tr>
+        <td>{{ d.alumno.first_name }} {{ d.alumno.last_name }}</td>
+        <td>{{ d.asignacion.curso.nombre }}</td>
+        <td>{{ d.asignacion.catedratico.first_name }} {{ d.asignacion.catedratico.last_name }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+</body>
+</html>

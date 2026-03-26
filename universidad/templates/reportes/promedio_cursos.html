@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Promedio por Curso</title>
+</head>
+<body>
+
+<h2>Promedio de Notas por Curso</h2>
+
+<table border="1">
+    <tr>
+        <th>Curso</th>
+        <th>Promedio</th>
+    </tr>
+
+    {% for d in datos %}
+    <tr>
+        <td>{{ d.inscripcion__asignacion__curso__nombre }}</td>
+        <td>{{ d.promedio }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+</body>
+</html>

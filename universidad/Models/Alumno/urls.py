@@ -4,21 +4,18 @@ from . import views
 app_name = 'alumno'
 
 urlpatterns = [
+
     path('', views.alumno_list, name='list'),
     path('<int:pk>/editar/', views.alumno_edit, name='edit'),
     path('<int:pk>/eliminar/', views.alumno_delete, name='delete'),
 
-
-    path('cursos/', views.cursos_list, name='cursos_list'),
     path('cursos/', views.cursos_list, name='cursos_list'),
     path('cursos/<int:pk>/editar/', views.curso_edit, name='curso_edit'),
     path('cursos/<int:pk>/eliminar/', views.curso_delete, name='curso_delete'),
 
-
     path('catedraticos/', views.catedraticos_list, name='catedraticos_list'),
     path('catedraticos/<int:pk>/editar/', views.catedratico_edit, name='catedratico_edit'),
     path('catedraticos/<int:pk>/eliminar/', views.catedratico_delete, name='catedratico_delete'),
-
 
     path('asignaciones/', views.asignaciones_list, name='asignaciones_list'),
     path('asignaciones/<int:pk>/editar/', views.asignacion_edit, name='asignacion_edit'),
@@ -29,6 +26,11 @@ urlpatterns = [
     path('inscripciones/<int:pk>/eliminar/', views.inscripcion_delete, name='inscripcion_delete'),
 
     path('notas/', views.notas_list, name='notas_list'),
-    path('notas/', views.notas_list, name='notas_list'),path('notas/<int:pk>/editar/', views.nota_edit, name='nota_edit'),
+    path('notas/<int:pk>/editar/', views.nota_edit, name='nota_edit'),
     path('notas/<int:pk>/eliminar/', views.nota_delete, name='nota_delete'),
+
+    # REPORTES
+    path('reporte-alumnos/', views.reporte_alumnos_cursos, name='reporte_alumnos'),
+    path('reporte-promedios/', views.reporte_promedio_cursos, name='reporte_promedios'),
+
 ]

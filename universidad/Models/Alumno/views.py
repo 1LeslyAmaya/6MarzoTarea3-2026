@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.db.models import Avg
 
 from .models import Alumno, Cursos, Catedratico
 from .forms import AlumnoForm, CursoForm, CatedraticoForm
@@ -13,6 +14,10 @@ from .forms import InscripcionAlumnoForm
 from .models import Nota
 from .forms import NotaForm
 
+
+# =========================
+# ALUMNOS
+# =========================
 
 def alumno_list(request):
     query = request.GET.get('q', '')
@@ -69,6 +74,9 @@ def alumno_delete(request, pk):
     return redirect('alumno:list')
 
 
+# =========================
+# CURSOS
+# =========================
 
 def cursos_list(request):
     cursos = Cursos.objects.all()
@@ -113,6 +121,10 @@ def curso_delete(request, pk):
     return redirect('alumno:cursos_list')
 
 
+# =========================
+# CATEDRATICOS
+# =========================
+
 def catedraticos_list(request):
     query = request.GET.get('q', '')
     catedraticos = Catedratico.objects.all()
@@ -148,8 +160,6 @@ def catedratico_edit(request, pk):
             form.save()
             messages.success(request, 'Catedrático actualizado correctamente.')
             return redirect('alumno:catedraticos_list')
-        else:
-            messages.error(request, 'Error al actualizar.')
 
     return render(request, 'alumno/catedratico_form.html', {
         'form': form,
@@ -168,10 +178,9 @@ def catedratico_delete(request, pk):
     return redirect('alumno:catedraticos_list')
 
 
-
-def asignaciones_list(request):
-    return render(request, "alumno/asignaciones.html")
-
+# =========================
+# ASIGNACIONES
+# =========================
 
 def asignaciones_list(request):
     asignaciones = AsignacionCurso.objects.select_related('curso', 'catedratico')
@@ -182,8 +191,6 @@ def asignaciones_list(request):
             form.save()
             messages.success(request, 'Asignación creada correctamente.')
             return redirect('alumno:asignaciones_list')
-        else:
-            messages.error(request, 'Error al guardar.')
 
     return render(request, 'alumno/asignaciones.html', {
         'asignaciones': asignaciones,
@@ -218,10 +225,9 @@ def asignacion_delete(request, pk):
     return redirect('alumno:asignaciones_list')
 
 
-def inscripciones_list(request):
-    return render(request, "alumno/inscripciones.html")
-
-
+# =========================
+# INSCRIPCIONES
+# =========================
 
 def inscripciones_list(request):
     inscripciones = InscripcionAlumno.objects.select_related('alumno', 'asignacion')
@@ -232,8 +238,6 @@ def inscripciones_list(request):
             form.save()
             messages.success(request, 'Inscripción realizada correctamente.')
             return redirect('alumno:inscripciones_list')
-        else:
-            messages.error(request, 'Error al inscribir.')
 
     return render(request, 'alumno/inscripciones.html', {
         'inscripciones': inscripciones,
@@ -267,9 +271,10 @@ def inscripcion_delete(request, pk):
 
     return redirect('alumno:inscripciones_list')
 
-def notas_list(request):
-    return render(request, "alumno/notas.html")
 
+# =========================
+# NOTAS
+# =========================
 
 def notas_list(request):
     notas = Nota.objects.select_related(
@@ -285,8 +290,6 @@ def notas_list(request):
             form.save()
             messages.success(request, 'Nota registrada correctamente.')
             return redirect('alumno:notas_list')
-        else:
-            messages.error(request, 'Error al guardar la nota.')
 
     return render(request, 'alumno/notas.html', {
         'notas': notas,
@@ -319,3 +322,33 @@ def nota_delete(request, pk):
         return redirect('alumno:notas_list')
 
     return redirect('alumno:notas_list')
+
+
+# =========================
+# REPORTES
+# =========================
+
+def reporte_alumnos_cursos(request):
+
+    datos = InscripcionAlumno.objects.select_related(
+        'alumno',
+        'asignacion__curso',
+        'asignacion__catedratico'
+    )
+
+    return render(request, 'reportes/alumnos_cursos.html', {
+        'datos': datos
+    })
+
+
+def reporte_promedio_cursos(request):
+
+    datos = Nota.objects.values(
+        'inscripcion__asignacion__curso__nombre'
+    ).annotate(
+        promedio=Avg('calificacion')
+    )
+
+    return render(request, 'reportes/promedio_cursos.html', {
+        'datos': datos
+    })
