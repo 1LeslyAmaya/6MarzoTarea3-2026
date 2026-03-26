@@ -1,28 +1,93 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Reporte Alumnos por Curso</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-<h2>Reporte de Alumnos Inscritos en Cursos</h2>
+{% block content %}
 
-<table border="1">
-    <tr>
-        <th>Alumno</th>
-        <th>Curso</th>
-        <th>Catedrático</th>
-    </tr>
+<div class="container-fluid">
 
-    {% for d in datos %}
-    <tr>
-        <td>{{ d.alumno.first_name }} {{ d.alumno.last_name }}</td>
-        <td>{{ d.asignacion.curso.nombre }}</td>
-        <td>{{ d.asignacion.catedratico.first_name }} {{ d.asignacion.catedratico.last_name }}</td>
-    </tr>
-    {% endfor %}
+    <h1 class="h3 mb-4 text-gray-800">Reporte de Alumnos por Curso</h1>
 
-</table>
+    <div class="card shadow mb-4">
 
-</body>
-</html>
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">
+                Alumnos inscritos en cursos
+            </h6>
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-hover">
+
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Alumno</th>
+                            <th>Curso</th>
+                            <th>Catedrático</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                    {% for d in datos %}
+
+                        <tr>
+                            <td>{{ forloop.counter0|add:datos.start_index|add:0}}</td>
+                            <td>{{ d.alumno }}</td>
+                            <td>{{ d.asignacion.curso }}</td>
+                            <td>{{ d.asignacion.catedratico }}</td>
+                        </tr>
+
+                    {% empty %}
+
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                No hay datos registrados
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <!-- PAGINACIÓN -->
+
+            <div class="d-flex justify-content-between mt-3">
+
+                <div>
+                    Página {{ datos.number }} de {{ datos.paginator.num_pages }}
+                </div>
+
+                <div>
+
+                    {% if datos.has_previous %}
+                    <a class="btn btn-secondary btn-sm"
+                       href="?page={{ datos.previous_page_number }}">
+                       Anterior
+                    </a>
+                    {% endif %}
+
+                    {% if datos.has_next %}
+                    <a class="btn btn-primary btn-sm"
+                       href="?page={{ datos.next_page_number }}">
+                       Siguiente
+                    </a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

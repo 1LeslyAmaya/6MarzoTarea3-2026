@@ -13,11 +13,7 @@ from .forms import InscripcionAlumnoForm
 
 from .models import Nota
 from .forms import NotaForm
-
-
-# =========================
-# ALUMNOS
-# =========================
+from django.core.paginator import Paginator
 
 def alumno_list(request):
     query = request.GET.get('q', '')
@@ -74,9 +70,6 @@ def alumno_delete(request, pk):
     return redirect('alumno:list')
 
 
-# =========================
-# CURSOS
-# =========================
 
 def cursos_list(request):
     cursos = Cursos.objects.all()
@@ -121,9 +114,6 @@ def curso_delete(request, pk):
     return redirect('alumno:cursos_list')
 
 
-# =========================
-# CATEDRATICOS
-# =========================
 
 def catedraticos_list(request):
     query = request.GET.get('q', '')
@@ -178,9 +168,6 @@ def catedratico_delete(request, pk):
     return redirect('alumno:catedraticos_list')
 
 
-# =========================
-# ASIGNACIONES
-# =========================
 
 def asignaciones_list(request):
     asignaciones = AsignacionCurso.objects.select_related('curso', 'catedratico')
@@ -225,9 +212,6 @@ def asignacion_delete(request, pk):
     return redirect('alumno:asignaciones_list')
 
 
-# =========================
-# INSCRIPCIONES
-# =========================
 
 def inscripciones_list(request):
     inscripciones = InscripcionAlumno.objects.select_related('alumno', 'asignacion')
@@ -272,9 +256,6 @@ def inscripcion_delete(request, pk):
     return redirect('alumno:inscripciones_list')
 
 
-# =========================
-# NOTAS
-# =========================
 
 def notas_list(request):
     notas = Nota.objects.select_related(
@@ -324,30 +305,34 @@ def nota_delete(request, pk):
     return redirect('alumno:notas_list')
 
 
-# =========================
-# REPORTES
-# =========================
 
 def reporte_alumnos_cursos(request):
 
-    datos = InscripcionAlumno.objects.select_related(
+    datos_lista = InscripcionAlumno.objects.select_related(
         'alumno',
         'asignacion__curso',
         'asignacion__catedratico'
     )
 
+    paginator = Paginator(datos_lista, 50)
+    page_number = request.GET.get('page')
+    datos = paginator.get_page(page_number)
+
     return render(request, 'reportes/alumnos_cursos.html', {
         'datos': datos
     })
 
-
 def reporte_promedio_cursos(request):
 
-    datos = Nota.objects.values(
+    datos_lista = Nota.objects.values(
         'inscripcion__asignacion__curso__nombre'
     ).annotate(
         promedio=Avg('calificacion')
     )
+
+    paginator = Paginator(datos_lista, 50)
+    page_number = request.GET.get('page')
+    datos = paginator.get_page(page_number)
 
     return render(request, 'reportes/promedio_cursos.html', {
         'datos': datos
